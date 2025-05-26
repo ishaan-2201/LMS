@@ -1,6 +1,4 @@
 import Course from "../models/Course.js";
-import Purchase from "../models/Purchase.js";
-import User from "../models/User.js";
 
 //Get all courses
 export const getAllCourses = async (req, res) => {
