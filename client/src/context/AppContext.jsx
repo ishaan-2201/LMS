@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { dummyCourses } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 
 export const AppContext = createContext();
 
@@ -13,6 +13,7 @@ export const AppContextProvider = (props) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const navigate = useNavigate();
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
 
   //Fetch all the courses
   const fetchAllCourses = async () => {
@@ -60,18 +61,16 @@ export const AppContextProvider = (props) => {
     fetchAllCourses();
     fetchEnrolledCourses();
   }, []);
-  // useEffect(() => {
-  //   if (!isLoaded || !user) return;
-  //   const courses = [];
-  //   allCourses.forEach((course) => {
-  //     course.enrolledStudents.forEach((student) => {
-  //       if (student === user.id) {
-  //         courses.push(course.courseTitle);
-  //       }
-  //     });
-  //   });
-  //   setEnrolledCourses(courses);
-  // }, [allCourses, user, isLoaded]);
+
+  const logToken = async () => {
+    console.log(await getToken());
+  };
+
+  useEffect(() => {
+    if (user) {
+      logToken();
+    }
+  }, [user]);
   const contextValue = {
     currency,
     allCourses,
